@@ -55,11 +55,11 @@
                     <td><a class="glyphicon glyphicon-trash" href="./Controller?action=deleteDept&id=${dept.ID}"/></td>
                 </tr>
             </c:forEach>        
-                <tr>
-                    <td colspan="7">
-                        <a href="./Controller?action=addDept"><input type="button" value="Ajouter un département"/></a>
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="7">
+                    <a href="./Controller?action=addDept"><input type="button" value="Ajouter un département"/></a>
+                </td>
+            </tr>
         </table>                
     </body>
 </html>

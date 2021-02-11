@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.dao;
 
 import com.entity.Departement;
@@ -19,31 +18,29 @@ import org.hibernate.Transaction;
  * @author Dell
  */
 public class daoEmploye {
-  Session S ;
-    Transaction Tx ;
 
-    public daoEmploye()
-    {
+    Session S;
+    Transaction Tx;
+
+    public daoEmploye() {
         S = HibernateUtil.getSessionFactory().openSession();
     }
-    
-    public void addEmploye(Employe emp) 
-    {
+
+    public void addEmploye(Employe emp) {
         try {
-            Tx= S.beginTransaction();
+            Tx = S.beginTransaction();
             S.save(emp);
             Tx.commit();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             Tx.rollback();
             e.printStackTrace();
         }
     }
-    
-    public void updateEmploye(Employe emp) 
-    {
+
+    public void updateEmploye(Employe emp) {
         try {
-            Tx= S.beginTransaction();
+            Tx = S.beginTransaction();
             S.update(emp);
             Tx.commit();
 
@@ -52,74 +49,93 @@ public class daoEmploye {
             e.printStackTrace();
         }
     }
-    
-    public void deleteEmploye(String code)
-    {
+
+    public void deleteEmploye(int code) {
         Employe emp = null;
         try {
-            Tx= S.beginTransaction();
+            Tx = S.beginTransaction();
             emp = (Employe) S.get(Employe.class, code);
-            if (emp != null){
+            if (emp != null) {
                 S.delete(emp);
-                if (!Tx.wasCommitted())
+                if (!Tx.wasCommitted()) {
                     Tx.commit();
+                }
             }
-            
+
         } catch (Exception e) {
             Tx.rollback();
             e.printStackTrace();
         }
     }
-    
-    public Employe getEmploye(String code)
-    {
+
+    public Employe getEmploye(String code) {
         Employe emp = null;
-        
+
         try {
-            Tx= S.beginTransaction();
+            Tx = S.beginTransaction();
             emp = (Employe) S.get(Employe.class, code);
-            if (!Tx.wasCommitted())
-                    Tx.commit();
+            if (!Tx.wasCommitted()) {
+                Tx.commit();
+            }
         } catch (Exception e) {
             Tx.rollback();
             e.printStackTrace();
         }
-        
+
         return emp;
     }
-    
+
     public List<Employe> EmpByDept(int refDept) {
-       List<Employe> employes = null;
-       Query query = null;
+        List<Employe> employes = null;
+        Query query = null;
         try {
-                query = S.createQuery("from Employe where refDept = :refDept");
-                query.setParameter("refDept", refDept);
-                employes = query.list();
+            query = S.createQuery("from Employe where refDept = :refDept");
+            query.setParameter("refDept", refDept);
+            employes = query.list();
         } catch (Exception e) {
-                e.printStackTrace();
+            S.getTransaction().rollback();
+            e.printStackTrace();
         }
         return employes;
     }
 
-    public void DelByDept (int refDept){
-        Query query = null;
+    public void DelByDept(int refDept) {
+//        Query query = null;
+//        try {
+//            query = S.createQuery("delete Employe where refDept = :refDept");
+//            query.setParameter("refDept", refDept);
+//            int n = query.executeUpdate();
+//            System.out.println("after execute update");
+//            S.getTransaction().commit();
+//            if (n > 0) {
+//                System.out.println("Employes Deleted");
+//            } else {
+//                System.out.println("Error!!! Employes not deleted");
+//            }
+//        } catch (Exception e) {
+//            S.getTransaction().rollback();
+//            e.printStackTrace();
+//        } finally {
+//            S.close();
+//        }
+        List<Employe> employes = this.EmpByDept(refDept);
         try {
-                query = S.createQuery("delete from Employe where refDept = :refDept");
-                query.setParameter("refDept", refDept);
-                int n = query.executeUpdate();
-                if(n>0) System.out.println("Employes Deleted");
-                else System.out.println("Error!!! Employes not deleted");
+            for (Employe emp : employes) {
+                this.deleteEmploye(emp.getID());
+            }
         } catch (Exception e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
+
     }
-    
+
     public List<Employe> All() {
         List<Employe> employes = null;
         try {
-                employes = S.createQuery("from Employe").list();
+            employes = S.createQuery("from Employe").list();
         } catch (Exception e) {
-                e.printStackTrace();
+            S.getTransaction().rollback();
+            e.printStackTrace();
         }
         return employes;
     }

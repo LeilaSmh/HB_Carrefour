@@ -50,7 +50,7 @@
                         <td>${list[i].nom}</td>
                         <td>${list[i].salaire}</td>
                         <td><a class="glyphicon glyphicon-edit" href="./Controller?action=editEmp&idEmp=${list[i].idEmp}"/></td>
-                        <td><a class="glyphicon glyphicon-trash" href="./Controller?action=deleteEmp&idEmp=${list[i].idEmp}"/></td>
+                        <td><a class="glyphicon glyphicon-trash" href="./Controller?action=deleteEmp&id=${list[i].ID}"/></td>
                     </tr> 
             </c:forEach>              
         </table>     
